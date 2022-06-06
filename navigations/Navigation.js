@@ -19,7 +19,7 @@ import { Icon } from 'react-native-elements'
             case "restaurants":
                 iconName = "radio"
                 break;
-            case "favorites":
+            case "patrocinios":
                 iconName ="playlist-music"
                 break;
             case "search":
@@ -56,9 +56,9 @@ import { Icon } from 'react-native-elements'
                     options = {{title:"Gravity Radio CR"}}
                 />
                 <Tab.Screen
-                    name="favorites"
+                    name="patrocinios"
                     component={FavoritesStack}
-                    options = {{title:"PodCast"}}
+                    options = {{title:"Patrocinadores"}}
                 />
                 <Tab.Screen
                     name="search"

@@ -1,20 +1,28 @@
 import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
-////////////////////////////////////////////////////
-import Favorites from '../screens/Favorites';
+// ////////////////////////////////////////////////////
+import Patrocinios from '../screens/patrocinios/Patrocinios'
+import AddPatrocinios from '../screens/patrocinios/AddPatrocinios';
 
 const Stack = createStackNavigator()
 
 export default function FavoritesStack() {
     return (
         <Stack.Navigator
-        screenOptions={{
-            headerShown: false,
-          }}>
+            screenOptions={{
+                headerShown: false,
+            }}
+          >
             <Stack.Screen
-                name="favorites"
-                component={Favorites}
-                options={{title:"Favoritos"}}
+                name="patrocinios"
+                component={Patrocinios}
+                options={{title:"Patrocinadores"}}
+                
+            />
+            <Stack.Screen
+                name="add-patrocinios"
+                component={AddPatrocinios}
+                options={{title:"Crear Patrocinadores"}}
             />
         </Stack.Navigator>
     )

@@ -34,7 +34,7 @@ export default function InfoUser({ user, setLoading, setLoadingText}) {
     <View style={styles.container}>
       <Avatar
         rounded
-        size="large"
+        size="xlarge"
         onPress={changePhoto}
         source={
           photoUrl ? { uri: photoUrl } : require("../../assets/avatar.jpg")
@@ -56,13 +56,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     flexDirection: "row",
     backgroundColor: "#F9F9F9",
-    paddingVertical: 30
+    paddingVertical: 25
   },
   infoUser: {
     marginLeft: 20
   },
   displayName: {
     fontWeight: "bold",
+    fontSize:16,
     paddingBottom: 5
   }
 });
