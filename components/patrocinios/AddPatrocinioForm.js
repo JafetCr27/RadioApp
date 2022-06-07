@@ -1,14 +1,18 @@
-import React, {useState} from 'react'
-import { StyleSheet, View, ScrollView, Alert, Dimensions } from 'react-native'
+import React, {useState,useEffect} from 'react'
+import { StyleSheet, View, ScrollView, Alert, Dimensions,Text } from 'react-native'
 import { Input, Button,Icon, Avatar ,Image} from 'react-native-elements';
 import CountryPicker from 'react-native-country-picker-modal'
+import { map , size , filter , isEmpty } from 'lodash'
+import MapView from 'react-native-maps';
+import uuid from 'random-uuid-v4'
 
-import { map , size , filter } from 'lodash'
-import { loadImageFromGallery } from '../../utils/helpers';
+import { loadImageFromGallery,getCurrentLocation,validateEmail } from '../../utils/helpers';
+import Modal from '../../components/Modal'
+import { uploadImage, getCurrentUser, addDocumentWithoutId } from '../../utils/actions';
 
 const widthScreen = Dimensions.get("window").width
 
-export default function AddPatrocinioForm({ toasRef,setLoading, navigation}) {
+export default function AddPatrocinioForm({ toastRef,setLoading, navigation}) {
       
     const [formData, setFormData] = useState(defaultValues())
     const [errorName, setErrorName] = useState(null)    
@@ -17,14 +21,101 @@ export default function AddPatrocinioForm({ toasRef,setLoading, navigation}) {
     const [errorAddress, setErrorAddress] = useState(null)    
     const [errorPhone, setErrorPhone] = useState(null)    
     const [imagesSelected, setImagesSelected] = useState([])
-
-
-    const addPatrocinio = () =>{
-        console.log(formData)
-        console.log("Fuck Yeah!!")
+    const [isVisibleMap,setIsVisibleMap] = useState(false)
+    const [locationPatrocinio, setLocationPatrocinio] = useState(null)
+    const addPatrocinio = async () =>{
+        if (!validForm()) {
+            return
+        }
+        setLoading(true)
+        const responseUploadImage = await uploadImages()
+        const patrocinio = {
+            name : formData.name,
+            address : formData.address,
+            email : formData.email,
+            callingCode : formData.callingCode,
+            description : formData.description,
+            address : formData.address,
+            location : locationPatrocinio,
+            images:imagesSelected,
+            raitng:0,
+            raitngTotal:0,
+            quantityVotng:0,
+            createAt: new Date(),
+            createBy: getCurrentUser().uid
+        }
+        const responseAddDocument = await addDocumentWithoutId("patrocinios",patrocinio)
+        setLoading(false)
+        if (!responseAddDocument.statusResponse) {
+            toastRef.current.show("Error al ingresar el patrocinio")
+            setLoading(false)
+            return
+        }
+         navigation.navigate("patrocinios")
     }
+    const uploadImages = async () =>{
+        const imagesUrl = []
+        await Promise.all(
+            map( imagesSelected, async ( image ) => {
+                const response = await uploadImage(image,"Patrocinios",uuid())
+                if (response.statusResponse) {
+                    imagesUrl.push(response.url)
+                }
+            })
+        )
+        return imagesUrl
+    }
+    const validForm = () =>{
+        clearErrors()
+        let isValid = true
 
+        if (isEmpty(formData.name)) {
+            setErrorName("Debes ingresar un nombre")
+            isValid = false
+        }
+        if (isEmpty(formData.address)) {
+            setErrorAddress("Debes ingresar la direción")
+            isValid = false
+        }
+        if (isEmpty(formData.phone)) {
+            setErrorPhone("Debes ingresar un teléfono")
+            isValid = false
+        }
+        if (size(formData.phone)>8) {
+            setErrorPhone("Solo puedes ingresar 8 dígitos")
+            isValid = false
+        }
+        if (isEmpty(formData.description)) {
+            setErrorDescription("Debes ingresar una descripción")
+            isValid = false
+        }
 
+        if (!isEmpty(formData.email)) {
+           
+            if (!validateEmail(formData.email)) {
+                setErrorEmail("Debes ingresar un email válido.")
+                isValid = false
+            }
+        }
+
+        if (!locationPatrocinio) {
+            toastRef.current.show("Selecciona una ubicacion en el mapa")
+            isValid = false
+        }
+        else if(size(imagesSelected) === 0)
+        {
+            toastRef.current.show("Debe seleccionar al menos una imagen")
+            isValid = false
+        }
+        return isValid
+    }
+    const clearErrors = () =>{
+        setErrorName(null)
+        setErrorDescription(null)
+        setErrorAddress(null)
+        setErrorEmail(null)
+        setErrorPhone(null)
+    }
     return (
         <ScrollView style={styles.viewContainer}>
             
@@ -39,9 +130,11 @@ export default function AddPatrocinioForm({ toasRef,setLoading, navigation}) {
                 errorAddress={errorAddress}
                 errorEmail={errorEmail}
                 errorPhone={errorPhone}
+                setIsVisibleMap={setIsVisibleMap}
+                locationPatrocinio={locationPatrocinio}
             />
             <UploadImage 
-                toasRef={toasRef}
+                toastRef={toastRef}
                 imagesSelected={imagesSelected}
                 setImagesSelected={setImagesSelected}
             />
@@ -50,10 +143,80 @@ export default function AddPatrocinioForm({ toasRef,setLoading, navigation}) {
                 onPress={addPatrocinio}
                 buttonStyle={styles.btnAddPatrocinio}
             />
+            <MapPatrocinio
+                isVisibleMap={isVisibleMap}
+                setIsVisibleMap={setIsVisibleMap}
+                setLocationPatrocinio={setLocationPatrocinio}
+                toastRef={toastRef}
+            />
         </ScrollView>
     )
 
 }
+
+function MapPatrocinio({ isVisibleMap, setIsVisibleMap,setLocationPatrocinio, toastRef }){
+    
+    const [newRegion, setNewRegion] = useState(null)
+
+    useEffect(() => {
+        (async() => {
+            const response = await getCurrentLocation()
+            if (response.status) {
+                setNewRegion(response.location)
+            }
+        })()
+    }, [])
+    
+    const confirmLocation = () =>{
+        setLocationPatrocinio(newRegion)
+        toastRef.current.show("Ubicación actualiizada")
+        setIsVisibleMap(false);
+    }
+    return(
+        <Modal isVisible={isVisibleMap} setVisible={setIsVisibleMap}>
+        <View>
+            {
+                 newRegion && (
+                    <MapView 
+                        style={styles.map} 
+                        initialRegion={newRegion}
+                        showsUserLocation
+                        onRegionChange={(region)=>setNewRegion(region)}
+                    >
+                        <MapView.Marker
+                            coordinate={{
+                                latitude:newRegion.latitude,
+                                longitude:newRegion.longitude
+
+                            }}
+                            draggable
+                        />
+
+                    </MapView>
+                 )
+    
+            }
+            <View style={styles.viewMapBtn}>
+                <Button
+                    title={"Guardar ubicación"}
+                    containerStyle={styles.viewMapBtnContainerSave}
+                    buttonStyle={styles.viewMapBtnSave}
+                    onPress={confirmLocation}
+                />
+                <Button
+                    title={"Cancelar ubicación"}
+                    containerStyle={styles.viewMapBtnContainerCancel}
+                    buttonStyle={styles.viewMapBtnCancel}
+                    onPress={()=>setIsVisibleMap(false)}
+                />
+            </View>
+
+        </View>
+        </Modal>
+
+    )
+}
+
 function ImagePatrocinio( { imagePatrocinio } ){
     return(
 
@@ -74,15 +237,14 @@ function ImagePatrocinio( { imagePatrocinio } ){
         </View>
     )
 }
-function UploadImage ({toasRef,imagesSelected,setImagesSelected}) {
+function UploadImage ({toastRef,imagesSelected,setImagesSelected}) {
 
     const imageSelec = async () => {
         const response = await loadImageFromGallery([4,3])
         if(!response.status){
-            toasRef.current.show("Debe seleccionar una imagen",3000)
+            toastRef.current.show("Debe seleccionar una imagen",3000)
             return
         }
-        console.log("aqui")
         setImagesSelected([...imagesSelected,response.image])
 
     }
@@ -125,6 +287,8 @@ function UploadImage ({toasRef,imagesSelected,setImagesSelected}) {
                         color="#7a7a7a"
                         containerStyle={styles.containerIcon}
                         onPress={imageSelec}
+                        size={40}
+
                     />
                 )
             }
@@ -143,7 +307,7 @@ function UploadImage ({toasRef,imagesSelected,setImagesSelected}) {
         </ScrollView>
     )
 }
-function FormAdd({formData,setFormData,errorName,errorDescription,errorAddress,errorEmail,errorPhone}){
+function FormAdd({formData,setFormData,errorName,errorDescription,errorAddress,errorEmail,errorPhone,setIsVisibleMap,locationPatrocinio}){
     const [country, setCountry] = useState("CR")
     const [calligCode, setCalligCode] = useState("506")
     const [phone, setPhone] = useState("")
@@ -166,6 +330,13 @@ function FormAdd({formData,setFormData,errorName,errorDescription,errorAddress,e
                 defaultValue={formData.address}
                 onChange={(e)=> onChange(e,"address")}
                 errorMessage={errorAddress}
+                rightIcon={{
+                    type : "material-community",
+                    name : "google-maps",
+                    color : locationPatrocinio ? "orange": "#c2c2c2",
+                    onPress : () => setIsVisibleMap(true),
+                    
+                }}
             />
             <Input
                 keyboardType="email-address"
@@ -201,8 +372,8 @@ function FormAdd({formData,setFormData,errorName,errorDescription,errorAddress,e
                     errorMessage={errorPhone}
                 />
             </View>
-        <Input
-                placeholder="Descripción..."
+             <Input
+                placeholder="Describe tu empresa..."
                 multiline
                 containerStyle={styles.textArea}
                 defaultValue={formData.description}
@@ -270,5 +441,26 @@ const styles = StyleSheet.create({
         alignItems:"center",
         height:200,
         marginBottom:20
+    },
+    map: {
+        width: "100%",
+        height: 550
+    },
+    viewMapBtn:{
+        flexDirection:"row",
+        justifyContent:"center",
+        marginTop:10
+    },
+    viewMapBtnContainerSave:{
+        paddingRight:5
+    },
+    viewMapBtnContainerCancel:{
+        paddingLeft:5
+    },
+    viewMapBtnCancel:{
+        backgroundColor:"#a65273"
+    },
+    viewMapBtnSave:{
+        backgroundColor:"#442484"
     }
 })
