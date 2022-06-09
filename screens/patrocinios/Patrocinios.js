@@ -6,6 +6,8 @@ import {useFocusEffect} from '@react-navigation/native'
 
 import * as firebase from 'firebase'
 import { getPatrocinios } from '../../utils/actions';
+import {size} from 'lodash'
+import ListPatrocinios from '../../components/patrocinios/ListPatrocinios';
 
 export default function Patrocinios({navigation}) {
 
@@ -41,12 +43,37 @@ export default function Patrocinios({navigation}) {
    if (user === null) {
        return <Loading isVisible={true} text="Cargando..."/>
    }
+   const handleLoadMore = async() => {
+    if (!startPatrocinio) {
+        return
+    }
+
+    setLoading(true)
+    const response = await getMoreRestaurants(limitPatrocinio, startPatrocinio)
+    if (response.statusResponse) {
+        setStartPatrocinio(response.startRestaurant)
+        setPatrocinios([...patrocinios, ...response.restaurants])
+    }
+    setLoading(false)
+}
 
     return (
         <View
             style={styles.viewBody}
         >
-            <Text>Patrocinios</Text>
+            {
+                size(patrocinios) > 0 ? (
+                    <ListPatrocinios
+                        patrocinios={patrocinios}
+                        navigation={navigation}
+                        handleLoadMore={handleLoadMore}
+                    />
+                ) : (
+                    <View style={styles.notFoundView}>
+                        <Text style={styles.notFoundText}>No hay restaurantes registrados.</Text>
+                    </View>
+                )
+            }
             {
                 user && (
                     <Icon
@@ -76,5 +103,14 @@ const styles = StyleSheet.create({
         shadowColor:"black",
         shadowOffset:{width:2,height:2},
         shadowOpacity:0.5
+    },
+    notFoundView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    notFoundText: {
+        fontSize: 18,
+        fontWeight: "bold"
     }
 })
