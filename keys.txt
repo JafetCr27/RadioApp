@@ -1,0 +1,5 @@
+Accessing credentials for jafetcr27 in project RadioApp
+Google Certificate Fingerprint:     2A:EF:E2:94:B6:C8:A4:28:EF:A1:1C:FE:09:C1:3E:1E:68:5D:97:44
+Google Certificate Hash (SHA-1):    2AEFE294B6C8A428EFA11CFE09C13E1E685D9744
+Google Certificate Hash (SHA-256):  7238EB8DD3D5989764DCA828831B8C52E46712C40D65D228636770759DFD9F86
+Facebook Key Hash:                  Ku/ilLbIpCjvoRz+CcE+Hmhdl0Q=

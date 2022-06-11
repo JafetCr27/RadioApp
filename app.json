@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "RadioApp",
+    "name": "GravityRadio",
     "slug": "RadioApp",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -25,13 +25,14 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "permissions":[
+      "permissions": [
         "CAMERA",
         "READ_EXTERNAL_STORAGE",
         "WRITE_EXTERNAL_STORAGE",
         "ACCESS_COARSE_LOCATION",
         "ACCESS_FINE_LOCATION"
-      ]
+      ],
+      "package": "com.jafetcr27.RadioApp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
