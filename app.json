@@ -25,6 +25,11 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBzrnsOFKjTdhni0spAZuDD7MYk_S2g_30"
+        }
+      },
       "permissions": [
         "CAMERA",
         "READ_EXTERNAL_STORAGE",
@@ -33,6 +38,7 @@
         "ACCESS_FINE_LOCATION"
       ],
       "package": "com.jafetcr27.RadioApp"
+      
     },
     "web": {
       "favicon": "./assets/favicon.png"
