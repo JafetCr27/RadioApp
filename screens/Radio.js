@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { StyleSheet, ScrollView ,Image,Icon ,View, Text} from 'react-native'
+import { StyleSheet, ScrollView ,Image,Linking ,View, Text} from 'react-native'
 import { LinearProgress,SocialIcon,Divider } from 'react-native-elements';
 import { Audio } from 'expo-av';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -20,10 +20,17 @@ export default function RadioScreen() {
         }
         else{
             setLoading(true);
+            await Audio.setAudioModeAsync({
+                staysActiveInBackground:true,
+                shouldDuckAndroid:true
+            })
             const { sound } = await Audio.Sound.createAsync (
                 { uri: 'https://ssl.hostingtico.com:7006/stream.mp3' },
-                { shouldPlay: true }
+                { shouldPlay: true },
+                { staysActiveInBackground :true }
             );
+
+
             setSound(sound);
             await sound.playAsync(); 
             setLoading(false);
