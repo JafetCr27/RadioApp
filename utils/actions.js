@@ -131,11 +131,11 @@ export const getPatrocinios = async(limitRestaurants) => {
     return result     
 }
 
-export const getMoreRestaurants = async(limitRestaurants, startRestaurant) => {
+export const getMorePatrocinios = async(limitRestaurants, startRestaurant) => {
     const result = { statusResponse: true, error: null, restaurants: [], startRestaurant: null }
     try {
         const response = await db
-            .collection("restaurants")
+            .collection("patrocinios")
             .orderBy("createAt", "desc")
             .startAfter(startRestaurant.data().createAt)
             .limit(limitRestaurants)
@@ -155,29 +155,29 @@ export const getMoreRestaurants = async(limitRestaurants, startRestaurant) => {
     return result     
 }
 
-// export const getDocumentById = async(collection, id) => {
-//     const result = { statusResponse: true, error: null, document: null }
-//     try {
-//         const response = await db.collection(collection).doc(id).get()
-//         result.document = response.data()
-//         result.document.id = response.id
-//     } catch (error) {
-//         result.statusResponse = false
-//         result.error = error
-//     }
-//     return result     
-// }
+export const getDocumentById = async(collection, id) => {
+    const result = { statusResponse: true, error: null, document: null }
+    try {
+        const response = await db.collection(collection).doc(id).get()
+        result.document = response.data()
+        result.document.id = response.id
+    } catch (error) {
+        result.statusResponse = false
+        result.error = error
+    }
+    return result     
+}
 
-// export const updateDocument = async(collection, id, data) => {
-//     const result = { statusResponse: true, error: null }
-//     try {
-//         await db.collection(collection).doc(id).update(data)
-//     } catch (error) {
-//         result.statusResponse = false
-//         result.error = error
-//     }
-//     return result     
-// }
+export const updateDocument = async(collection, id, data) => {
+    const result = { statusResponse: true, error: null }
+    try {
+        await db.collection(collection).doc(id).update(data)
+    } catch (error) {
+        result.statusResponse = false
+        result.error = error
+    }
+    return result     
+}
 
 // export const getRestaurantReviews = async(id) => {
 //     const result = { statusResponse: true, error: null, reviews: [] }

@@ -23,7 +23,7 @@ import { Icon } from 'react-native-elements'
                 iconName ="playlist-music"
                 break;
             case "search":
-                iconName ="magnify"
+                iconName ="newspaper"
                 break;
             case "account":
                 iconName ="home-circle"
@@ -63,7 +63,7 @@ import { Icon } from 'react-native-elements'
                 <Tab.Screen
                     name="search"
                     component={SearchStack}
-                    options = {{title:"search"}}
+                    options = {{title:"Noticias"}}
                 />
                 <Tab.Screen
                     name="account"

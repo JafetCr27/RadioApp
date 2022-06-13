@@ -9,20 +9,20 @@ export default function ListPatrocinios({patrocinios,navigation,handleLoadMore})
         <View>
              <FlatList
                 data={patrocinios}
-                keyExtractor={(item, index) => index.toString()}
+                keyExtractor = {(item, index) => index.toString()}
                 onEndReachedThreshold={0.5}
                 onEndReached={handleLoadMore}
-                // renderItem={(patrocinio) => (
-                //     <Patrocinio 
-                //         patrocinio={patrocinio} 
-                //         navigation={navigation}
-                //     />
-                // )}
+                renderItem={(patrocinio) => (
+                    <Patrocinio 
+                        patrocinio={patrocinio} 
+                        navigation={navigation}
+                    />
+                )}
             />
         </View>
     )
 }
-function Patrocinio({ patrocinio, navigation, handleLoadMore }) {
+function Patrocinio ({ patrocinio, navigation}) {
     const { id, images, name, address, description, phone, callingCode } = patrocinio.item
     const imageRestaurant = images[0]
 
@@ -31,11 +31,13 @@ function Patrocinio({ patrocinio, navigation, handleLoadMore }) {
     } 
 
     return (
-        <TouchableOpacity onPress={goRestaurtant}>
+        <TouchableOpacity
+             //onPress={goRestaurtant}
+             >
             <View style={styles.viewRestaurant}>
                 <View style={styles.viewRestaurantImage}>
                     <Image
-                        resizeMode="cover"
+                        resizeMode = "cover"
                         PlaceholderContent={<ActivityIndicator color="#fff"/>}
                         source={{ uri: imageRestaurant }}
                         style={styles.imageRestaurant}

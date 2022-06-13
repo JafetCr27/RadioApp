@@ -21,8 +21,13 @@ export default function RadioScreen() {
         else{
             setLoading(true);
             await Audio.setAudioModeAsync({
-                staysActiveInBackground:true,
-                shouldDuckAndroid:true
+                allowsRecordingIOS: false,
+                staysActiveInBackground: true,
+                interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DUCK_OTHERS,
+                playsInSilentModeIOS: true,
+                shouldDuckAndroid: true,
+                interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DUCK_OTHERS,
+                playThroughEarpieceAndroid: false
             })
             const { sound } = await Audio.Sound.createAsync (
                 { uri: 'https://ssl.hostingtico.com:7006/stream.mp3' },
@@ -49,7 +54,6 @@ export default function RadioScreen() {
             Alert.alert(`Don't know how to open this URL: ${url}`);
           }
       };
-
     React.useEffect(() => {
       return sound
         ? () => {
@@ -58,7 +62,6 @@ export default function RadioScreen() {
     }, [sound]);
     
     return (
-
         <ScrollView>
             <View 
                 style={styles.viewBody}>
@@ -87,10 +90,7 @@ export default function RadioScreen() {
                     style={{flexDirection: 'row'}}>
                     <SocialIcon
                         type="instagram"
-                        onPress={() => {
-                            //Action to perform onPress of the Icon
-                            alert('angellist');
-                        }}
+                        onPress={() => OpenURLButton("https://www.instagram.com/gravityradiocr/?hl=en")}
                     />
                     <Text style={styles.iconsText}> @gravityradiocr</Text>
                 </View>
@@ -130,12 +130,6 @@ export default function RadioScreen() {
                         color = { play ? "red" : "orange"} 
                         onPress = { ()=> playSound(!play) }
                         />
-                    {/* <Ionicons 
-                        name="pause-circle" 
-                        size={60} 
-                        color="green" 
-                        onPress={pauseSound}
-                    /> */}
                 </View>
                 <Loading
                     isVisible={loading}

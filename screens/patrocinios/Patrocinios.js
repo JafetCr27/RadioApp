@@ -3,10 +3,10 @@ import { StyleSheet, Text, View } from 'react-native'
 import { Icon } from 'react-native-elements'
 import Loading from '../../components/Loading';
 import {useFocusEffect} from '@react-navigation/native'
+import { size } from 'lodash'
 
 import * as firebase from 'firebase'
-import { getPatrocinios } from '../../utils/actions';
-import {size} from 'lodash'
+import { getPatrocinios, getMorePatrocinios } from '../../utils/actions';
 import ListPatrocinios from '../../components/patrocinios/ListPatrocinios';
 
 export default function Patrocinios({navigation}) {
@@ -49,7 +49,7 @@ export default function Patrocinios({navigation}) {
     }
 
     setLoading(true)
-    const response = await getMoreRestaurants(limitPatrocinio, startPatrocinio)
+    const response = await getMorePatrocinios(limitPatrocinio, startPatrocinio)
     if (response.statusResponse) {
         setStartPatrocinio(response.startRestaurant)
         setPatrocinios([...patrocinios, ...response.restaurants])
@@ -65,8 +65,8 @@ export default function Patrocinios({navigation}) {
                 size(patrocinios) > 0 ? (
                     <ListPatrocinios
                         patrocinios={patrocinios}
-                        navigation={navigation}
-                        handleLoadMore={handleLoadMore}
+                        navigation = {navigation}
+                        handleLoadMore = {handleLoadMore}
                     />
                 ) : (
                     <View style={styles.notFoundView}>

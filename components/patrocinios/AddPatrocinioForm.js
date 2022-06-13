@@ -38,6 +38,7 @@ export default function AddPatrocinioForm({ toastRef,setLoading, navigation}) {
             address : formData.address,
             location : locationPatrocinio,
             images:imagesSelected,
+            phone:formData.phone,
             raitng:0,
             raitngTotal:0,
             quantityVotng:0,
