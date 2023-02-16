@@ -47,7 +47,8 @@ import { Icon } from 'react-native-elements'
                     activeTintColor:"#442484",
                 }}
                 screenOptions={ ( { route } ) => ( {
-                    tabBarIcon:( { color } ) => screenOptions(route,color)
+                    tabBarIcon:( { color } ) => screenOptions(route,color),
+                    headerShown:false
                 })}
             >
                 <Tab.Screen

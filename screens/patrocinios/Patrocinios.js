@@ -18,18 +18,18 @@ export default function Patrocinios({navigation}) {
 
 
     const limitPatrocinio = 7
-    console.log("patrocinios",patrocinios)
-
     useFocusEffect(
-        useCallback( async () => {
-            setLoading(true)
-            const response = await getPatrocinios(limitPatrocinio)
-            if (response.statusResponse) {
-                setStartPatrocinio(response.startRestaurant)
-                setPatrocinios(response.restaurants)
+        useCallback(() => {
+            async function getData(){
+                setLoading(true)
+                const response = await getPatrocinios(limitPatrocinio)
+                if (response.statusResponse) {
+                    setStartPatrocinio(response.startRestaurant)
+                    setPatrocinios(response.restaurants)
+                }
+                setLoading(false)
             }
-            setLoading(false)
-
+            getData()
         }, [] )
 
     )
@@ -70,7 +70,7 @@ export default function Patrocinios({navigation}) {
                     />
                 ) : (
                     <View style={styles.notFoundView}>
-                        <Text style={styles.notFoundText}>No hay restaurantes registrados.</Text>
+                        <Text style={styles.notFoundText}>No hay patrocinadores registrados.</Text>
                     </View>
                 )
             }

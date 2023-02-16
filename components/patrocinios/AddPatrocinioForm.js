@@ -46,6 +46,7 @@ export default function AddPatrocinioForm({ toastRef,setLoading, navigation}) {
             createBy: getCurrentUser().uid
         }
         const responseAddDocument = await addDocumentWithoutId("patrocinios",patrocinio)
+
         setLoading(false)
         if (!responseAddDocument.statusResponse) {
             toastRef.current.show("Error al ingresar el patrocinio")
@@ -175,7 +176,8 @@ function MapPatrocinio({ isVisibleMap, setIsVisibleMap,setLocationPatrocinio, to
     }
     return(
         <Modal isVisible={isVisibleMap} setVisible={setIsVisibleMap}>
-        <View>
+        {
+         <View>
             {
                  newRegion && (
                     <MapView 
@@ -212,7 +214,8 @@ function MapPatrocinio({ isVisibleMap, setIsVisibleMap,setLocationPatrocinio, to
                 />
             </View>
 
-        </View>
+        </View> 
+        }
         </Modal>
 
     )

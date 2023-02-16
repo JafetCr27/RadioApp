@@ -6,14 +6,11 @@ const Stack = createStackNavigator()
 
 export default function RadioStack() {
     return (
-        <Stack.Navigator
-             screenOptions={{
-              headerShown: false,
-            }}
-        >
+        <Stack.Navigator>
             <Stack.Screen
                 name="restaurants"
-                component={RadioScreen}                
+                component={RadioScreen}
+                options= {{title:"Gravity Radio App"}}
             />
         </Stack.Navigator>
     )

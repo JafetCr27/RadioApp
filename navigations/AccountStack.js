@@ -8,14 +8,11 @@ const Stack = createStackNavigator()
 
 export default function AccountStack() {
     return (
-        <Stack.Navigator
-            screenOptions={{
-            headerShown: false,
-          }}>
+        <Stack.Navigator>
             <Stack.Screen
                 name="account"
                 component={Account}
-                options={{title:"Cuenta"}}
+                options={{title:"Cuenta de usuario"}}
             />
             <Stack.Screen
                 name="login"

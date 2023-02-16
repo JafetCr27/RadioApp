@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Image } from 'react-native'
 import { Divider } from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native'
 import { KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
+import { Avatar } from "react-native-elements";
 
  
 import LoginForm from '../../components/account/LoginForm';
@@ -11,11 +12,15 @@ export default function Login() {
     
     return (
         <KeyboardAwareScrollView>
-            <Image 
-                source={require("../../assets/restaurantLogo.png")}
-                resizeMode= "contain" 
-                style ={styles.image}
-            />
+            <View style={styles.containerImg}>
+                <Avatar
+                    rounded
+                    size="xlarge"
+                    source={
+                        require("../../assets/p3.jpg")
+                    }
+                />
+            </View>
             <View
                 style = {styles.container}
             >
@@ -47,14 +52,22 @@ function CreateAccountg(props){
 }
 
 const styles = StyleSheet.create({
-    image:{
-        height:150,
-        width:"100%",
-        marginBottom:20
-    },
+    // image:{
+    //     height:150,
+    //     width:"100%",
+    //     marginBottom:20,
+    //     marginTop:10
+    // },
     container:{
-        marginHorizontal:40,
+        marginHorizontal:30,
 
+    },
+    containerImg:{
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: "row",
+        backgroundColor: "#F9F9F9",
+        paddingVertical: 25,
     },
     divider:{
         backgroundColor:"#442484",

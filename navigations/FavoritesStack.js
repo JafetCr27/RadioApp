@@ -9,11 +9,7 @@ const Stack = createStackNavigator()
 
 export default function FavoritesStack() {
     return (
-        <Stack.Navigator
-            screenOptions={{
-                headerShown: false,
-            }}
-          >
+        <Stack.Navigator>
             <Stack.Screen
                 name="patrocinios"
                 component={Patrocinios}

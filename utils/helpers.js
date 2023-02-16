@@ -75,7 +75,6 @@ export const callNumber = (phoneNumber) => {
 //         return Linking.openURL(link)
 //     })
 // }
-
 // export const sendEmail = (to, subject, body) => {
 //     Linking.openURL(`mailto:${to}?subject=${subject}&body=${body}`)
 // }   

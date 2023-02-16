@@ -26,13 +26,13 @@ function Patrocinio ({ patrocinio, navigation}) {
     const { id, images, name, address, description, phone, callingCode } = patrocinio.item
     const imageRestaurant = images[0]
 
-    const goRestaurtant = () => {
+    const goPatrocinio = () => {
         navigation.navigate("patrocinio", { id, name })
     } 
 
     return (
         <TouchableOpacity
-             //onPress={goRestaurtant}
+             onPress={goPatrocinio}
              >
             <View style={styles.viewRestaurant}>
                 <View style={styles.viewRestaurantImage}>
